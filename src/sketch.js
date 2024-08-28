@@ -9,17 +9,14 @@ function setup() {
 }
 
 function draw() {
-<<<<<<< HEAD
   background(255);  
   //sprite.x =  0.5 * frameCount % width;
   if(key == 'w') {
     sprite.y = sprite.y-5;
-=======
   background(250);  
   sprite.x =  0.5 * frameCount % width;
   if(frameCount % 30 == 0) {
     sprite.y = random(height);
->>>>>>> 81be04138b467787eac0491f743a4934f23966f1
   }
   
   if(key == 'a') {

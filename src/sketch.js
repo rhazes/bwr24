@@ -13,6 +13,7 @@ function draw() {
   //sprite.x =  0.5 * frameCount % width;
   if(key == 'w') {
     sprite.y = sprite.y-5;
+
   }
   
   if(key == 'a') {

@@ -1,14 +1,11 @@
 function setup() {
 	new Canvas(400, 400);
-
+	
 	sprite = new Sprite();
-<<<<<<< HEAD
 	sprite.diameter = 30;
-=======
-	sprite.diameter = 200;
->>>>>>> 81be04138b467787eac0491f743a4934f23966f1
-  noStroke();
-  world.gravity.y = 1;
+
+	  noStroke();
+	  world.gravity.y = 1;
 }
 
 function draw() {

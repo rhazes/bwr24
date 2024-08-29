@@ -1,83 +1,111 @@
-const canvas = document.createElement('canvas');
-const ctx = canvas.getContext('2d');
-canvas.width = 800;
-canvas.height = 400;
-document.body.appendChild(canvas);
+let mario;
+let ground;
+let platforms;
+let endPoint;
+let worldSpeed = 5;
+let score = 0;
+let gameOver = false;
 
-const player = {
-    x: 50,
-    y: 200,
-    radius: 20,
-    speed: 5,
-    dy: 0,
-    jumpForce: 15,
-    grounded: false
-};
+function setup() {
+  createCanvas(800, 400);
+  world.gravity.y = 9.8;
 
-const platforms = [
-    { x: 0, y: 350, width: 800, height: 50 },
-    { x: 300, y: 200, width: 200, height: 20 },
-    { x: 600, y: 300, width: 150, height: 20 }
-];
+  mario = new Sprite(100, 300, 30, 50);
+  mario.color = 'red';
+  mario.addAni('idle', 'assets/mario_idle.png');
+  mario.addAni('run', 'assets/mario_run.png', { frameSize: [32, 32], frames: 3 });
+  mario.collider = 'dynamic';
 
-const keys = {};
+  ground = new Sprite(400, height - 20, width, 40);
+  ground.collider = 'static';
 
-const gravity = 0.8;
+  platforms = new Group();
+  generatePlatforms();
 
-function drawPlayer() {
-    ctx.beginPath();
-    ctx.arc(player.x, player.y, player.radius, 0, Math.PI * 2);
-    ctx.fillStyle = 'red';
-    ctx.fill();
-    ctx.closePath();
+  endPoint = new Sprite(10000, height - 60, 50, 80);
+  endPoint.color = 'green';
+  endPoint.collider = 'static';
 }
 
-function drawPlatforms() {
-    ctx.fillStyle = 'green';
-    platforms.forEach(platform => {
-        ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
-    });
+function draw() {
+  if (gameOver) {
+    background(0);
+    fill(255);
+    textAlign(CENTER, CENTER);
+    textSize(32);
+    text(`Game Over! Score: ${score}`, width / 2, height / 2);
+    return;
+  }
+
+  background(135, 206, 235);
+  
+  handleInput();
+  updateWorld();
+  checkCollisions();
+  
+  drawSprites();
+  
+  fill(0);
+  textSize(20);
+  text(`Score: ${score}`, 20, 30);
 }
 
-function movePlayer() {
-    if (keys['ArrowLeft'] || keys['a']) player.x -= player.speed;
-    if (keys['ArrowRight'] || keys['d']) player.x += player.speed;
-    
-    player.y += player.dy;
-    player.dy += gravity;
+function handleInput() {
+  if (kb.pressing('left') || kb.pressing('a')) {
+    mario.vel.x = -5;
+    mario.mirror.x = true;
+  } else if (kb.pressing('right') || kb.pressing('d')) {
+    mario.vel.x = 5;
+    mario.mirror.x = false;
+  } else {
+    mario.vel.x = 0;
+  }
 
-    // Check for collisions with platforms
-    player.grounded = false;
-    platforms.forEach(platform => {
-        if (player.y + player.radius > platform.y &&
-            player.y + player.radius < platform.y + platform.height &&
-            player.x > platform.x &&
-            player.x < platform.x + platform.width) {
-            player.grounded = true;
-            player.y = platform.y - player.radius;
-            player.dy = 0;
-        }
-    });
+  if ((kb.pressed('up') || kb.pressed('w')) && mario.colliding(ground)) {
+    mario.vel.y = -12;
+  }
 
-    // Jump
-    if ((keys['ArrowUp'] || keys['w']) && player.grounded) {
-        player.dy = -player.jumpForce;
+  if (kb.pressing('down') || kb.pressing('s')) {
+    mario.vel.y += 0.5;
+  }
+
+  mario.ani = mario.vel.x !== 0 ? 'run' : 'idle';
+}
+
+function updateWorld() {
+  camera.x = mario.x + 300;
+  
+  ground.x = camera.x;
+  
+  if (frameCount % 60 === 0) {
+    generatePlatforms();
+  }
+  
+  platforms.forEach(platform => {
+    if (platform.x < camera.x - width / 2) {
+      platform.remove();
     }
-
-    // Keep player within canvas
-    player.x = Math.max(player.radius, Math.min(canvas.width - player.radius, player.x));
-    player.y = Math.min(canvas.height - player.radius, player.y);
+  });
+  
+  score = Math.floor(mario.x / 100);
 }
 
-function gameLoop() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    movePlayer();
-    drawPlatforms();
-    drawPlayer();
-    requestAnimationFrame(gameLoop);
+function generatePlatforms() {
+  let platformX = camera.x + width / 2 + random(100, 300);
+  let platformY = random(height - 150, height - 100);
+  let platformWidth = random(50, 150);
+  
+  let platform = new Sprite(platformX, platformY, platformWidth, 20);
+  platform.collider = 'static';
+  platforms.add(platform);
 }
 
-document.addEventListener('keydown', (e) => keys[e.key] = true);
-document.addEventListener('keyup', (e) => keys[e.key] = false);
-
-gameLoop();
+function checkCollisions() {
+  if (mario.collides(endPoint)) {
+    gameOver = true;
+  }
+  
+  if (mario.y > height + 100) {
+    gameOver = true;
+  }
+}

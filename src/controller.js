@@ -1,0 +1,4 @@
+/*
+players should have an instance of this and communicate
+with this object to update the model
+*/

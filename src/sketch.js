@@ -6,6 +6,7 @@ let curPlatform;
 
 function setup() {
 	createCanvas(400,400);
+  rectMode(CENTER);
   world.gravity.y = 10;
 	
   sprite = createSprite(200, 200,30);
@@ -33,8 +34,11 @@ function platformOn() {
 }
 
 function draw() {
-  background(255);  
+  background(255);
+  screenX=sprite.position.x+200;
+    
   camera.position.x = sprite.position.x;
+  camera.moveTo(sprite.position.x,200);
 
   if (sprite.position.y > height-20) {
     sprite.position.y = height-20;
@@ -73,4 +77,11 @@ function draw() {
   sprite.collide(ground);
 
   sprite.color = color(200, 0, 0);
+}
+
+function keyPressed() {
+    // Debug When D is pressed
+    if (key === 'd' || key === 'D') {
+        player.toggleDebugMode();
+    }
 }

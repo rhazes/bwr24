@@ -1,10 +1,13 @@
 let sprite;
 let p1, p2, p3, p4;
 let ground;
+let platforms = [];
+let curPlatform;
 
 function setup() {
 	createCanvas(400,400);
   rectMode(CENTER);
+
   world.gravity.y = 10;
 	
   sprite = createSprite(200, 200,30);
@@ -14,10 +17,21 @@ function setup() {
   p2 = createSprite(100,330,70,10, 'static');
   p3 = createSprite(200,200,70,10, 'static');
 
+  platforms.push(p1,p2,p3);
+
 
 
   sprite.friction = 0;
 	  noStroke();
+}
+
+function platformOn() {
+  for(i = 0; i < platforms.length; i++) {
+    if(sprite.collide(platforms[i])) {
+      return i;
+    }
+  }
+  return -1;
 }
 
 function draw() {
@@ -44,7 +58,12 @@ function draw() {
 
   // Jumping
   if ((keyIsDown(UP_ARROW) || keyIsDown(87)) && (sprite.collide(allSprites))) { // 87 is the keyCode for 'W'
-    sprite.velocity.y = -15;
+    curPlatform = platformOn();
+    if(curPlatform > 0)
+      print(platforms[curPlatform].position.y);
+      print(sprite.position.y);
+    if(curPlatform > 0 && sprite.position.y+25 > platforms[curPlatform].position.y || sprite.collide(ground))
+      sprite.velocity.y = -15;
   }
 
   // Apply gravity

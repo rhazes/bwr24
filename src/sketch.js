@@ -4,6 +4,7 @@ let ground;
 
 function setup() {
 	createCanvas(400,400);
+  rectMode(CENTER);
   world.gravity.y = 10;
 	
   sprite = createSprite(200, 200,30);
@@ -20,8 +21,11 @@ function setup() {
 }
 
 function draw() {
-  background(255);  
+  background(255);
+  screenX=sprite.position.x+200;
+    
   camera.position.x = sprite.position.x;
+  camera.moveTo(sprite.position.x,200);
 
   if (sprite.position.y > height-20) {
     sprite.position.y = height-20;

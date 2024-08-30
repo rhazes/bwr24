@@ -6,10 +6,8 @@ let curPlatform;
 
 function setup() {
 	createCanvas(400,400);
-<<<<<<< HEAD
-=======
   rectMode(CENTER);
->>>>>>> main
+
   world.gravity.y = 10;
 	
   sprite = createSprite(200, 200,30);

@@ -1,48 +1,43 @@
+let sprite;
+let p1, p2, p3, p4;
+let ground;
+
 function setup() {
-	new Canvas(400, 400);
+	createCanvas(400,400);
+  world.gravity.y = 10;
 	
-	sprite = new Sprite();
-	sprite.diameter = 30;
+  sprite = createSprite(200, 200,30);
+  ground = createSprite(0,400,800,10,'static');
 
-  platform = new Sprite();
-  platform.width = 60;
-  platform.length = 10;
+  p1 = createSprite(300,300,70,10, 'static');
+  p1 = createSprite(100,330,70,10, 'static');
+  p1 = createSprite(200,200,70,10, 'static');
 
 
+
+  sprite.friction = 0;
 	  noStroke();
-	  world.gravity.y = 1;
 }
 
 function draw() {
-  platform.y = 360;
-  platform.x = 40;
-  platform.immovable = true;
-  platform.rotationLock = true;
-
   background(255);  
-  //sprite.x =  0.5 * frameCount % width;
-  if(key == 'w') {
+
+  if (sprite.position.y > height-20) {
+    sprite.position.y = height-20;
+    sprite.velocity.y = 0;
+  }
+
+ 
+  if(keyIsDown(87))
     sprite.y = sprite.y-5;
-
-  }
-  
-  if(key == 'a') {
+  if(keyIsDown(65))
     sprite.x = sprite.x-4;
-  }
-
-  if(key == 'd') {
+  if(keyIsDown(68))
+    sprite.x = sprite.x+5;
+  if(keyIsDown(83))
     sprite.x = sprite.x+4;
-  }
-
-  if(key == 's') {
-    sprite.y = sprite.y+5;
-  }
-
-  if(sprite.y > 380) {
-    sprite.y = sprite.y-20;
-  }
+  if(keyIsDown(32))
+    sprite.velocity.x = 0;
 
   sprite.color = color(200, 0 , 0);
 }
-
-let sprite;

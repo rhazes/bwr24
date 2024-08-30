@@ -54,8 +54,10 @@ function draw() {
   // Jumping
   if ((keyIsDown(UP_ARROW) || keyIsDown(87)) && (sprite.collide(allSprites))) { // 87 is the keyCode for 'W'
     curPlatform = platformOn();
-    print(platforms[curPlatform].position.y);
-    if(curPlatform > 0 && sprite.position.y > platforms[curPlatform].position.y || sprite.collide(ground))
+    if(curPlatform > 0)
+      print(platforms[curPlatform].position.y);
+      print(sprite.position.y);
+    if(curPlatform > 0 && sprite.position.y+25 > platforms[curPlatform].position.y || sprite.collide(ground))
       sprite.velocity.y = -15;
   }
 

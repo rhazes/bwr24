@@ -4,7 +4,7 @@ let ground;
 
 function setup() {
 	createCanvas(400,400);
-  world.gravity.y = 8;
+  world.gravity.y = 10;
 	
   sprite = createSprite(200, 200,30);
   ground = createSprite(0,400,800,10,'static');
@@ -22,6 +22,7 @@ function setup() {
 function draw() {
   background(255);  
   camera.position.x = sprite.position.x;
+  camera.moveTo(sprite.position.x,200);
 
   if (sprite.position.y > height-20) {
     sprite.position.y = height-20;
@@ -44,7 +45,7 @@ function draw() {
   }
 
   // Apply gravity
-  sprite.velocity.y += 1;
+  sprite.velocity.y += 0.8;
 
   // Limit falling speed
   if (sprite.velocity.y > 15) {

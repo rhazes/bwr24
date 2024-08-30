@@ -60,3 +60,10 @@ function draw() {
 
   sprite.color = color(200, 0, 0);
 }
+
+function keyPressed() {
+    // Toggle debug mode when 'D' key is pressed
+    if (key === 'd' || key === 'D') {
+        player.toggleDebugMode();
+    }
+}

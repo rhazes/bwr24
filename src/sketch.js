@@ -62,7 +62,7 @@ function draw() {
 }
 
 function keyPressed() {
-    // Toggle debug mode when 'D' key is pressed
+    // Debug When D is pressed
     if (key === 'd' || key === 'D') {
         player.toggleDebugMode();
     }

@@ -1,11 +1,11 @@
 let sprite;
-let p1, p2, p3, p4;
+let p1, p2, p3;
 let ground;
 let platforms = [];
 let curPlatform;
 
 function setup() {
-	createCanvas(400,400);
+	createCanvas(1920,1080);
   rectMode(CENTER);
 
   world.gravity.y = 10;
@@ -13,16 +13,26 @@ function setup() {
   sprite = createSprite(500, 200,30);
   ground = createSprite(500,400,10000,10,'static');
 
-  p1 = createSprite(300,300,70,10, 'static');
-  p2 = createSprite(100,330,70,10, 'static');
-  p3 = createSprite(200,200,70,10, 'static');
+  // Create initial platforms
+  createPlatform(300, 300, 70, 10);
+  createPlatform(100, 330, 70, 10);
+  createPlatform(200, 200, 70, 10);
 
-  platforms.push(p1,p2,p3);
-
-
+  // Add more platforms
+  createPlatform(400, 250, 100, 10);
+  createPlatform(600, 280, 80, 10);
+  createPlatform(800, 220, 90, 10);
+  createPlatform(1000, 300, 110, 10);
+  createPlatform(1200, 180, 75, 10);
 
   sprite.friction = 0;
 	  noStroke();
+}
+
+function createPlatform(x, y, width, height) {
+  let platform = createSprite(x, y, width, height, 'static');
+  platforms.push(platform);
+  return platform;
 }
 
 function platformOn() {
@@ -39,7 +49,7 @@ function draw() {
   screenX=sprite.position.x+200;
     
   camera.position.x = sprite.position.x;
-  camera.moveTo(sprite.position.x,200);
+  camera.moveTo(sprite.position.x,540);
 
   if (sprite.position.y > height-20) {
     sprite.position.y = height-20;

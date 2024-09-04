@@ -10,8 +10,8 @@ function setup() {
 
   world.gravity.y = 10;
 	
-  sprite = createSprite(200, 200,30);
-  ground = createSprite(0,400,800,10,'static');
+  sprite = createSprite(500, 200,30);
+  ground = createSprite(500,400,10000,10,'static');
 
   p1 = createSprite(300,300,70,10, 'static');
   p2 = createSprite(100,330,70,10, 'static');

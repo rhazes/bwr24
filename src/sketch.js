@@ -15,7 +15,6 @@ function preload() {
 function setup() {
 	createCanvas(1920,1080);
   rectMode(CENTER);
-  image(backdrop,0,1920);
 
   world.gravity.y = 5; // Reduced from 7
 	
@@ -80,7 +79,7 @@ function platformOn() {
 }
 
 function draw() {
-  background(255);
+  image(backdrop, 0, 0, width, height);
   screenX=sprite.position.x+200;
     
   camera.position.x = sprite.position.x;

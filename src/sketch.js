@@ -5,10 +5,17 @@ let platforms = [];
 let curPlatform;
 let antagonists = [];
 let helicopter;
+let backdrop;
+
+function preload() {
+  backdrop = loadImage('images/Arrowhead full canvas.png')
+  helicopter = loadImage('images/helicopter.pdf')
+}
 
 function setup() {
 	createCanvas(1920,1080);
   rectMode(CENTER);
+  image(backdrop,0,1920);
 
   world.gravity.y = 5; // Reduced from 7
 	

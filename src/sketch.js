@@ -8,8 +8,8 @@ let helicopter;
 let backdrop;
 
 function preload() {
-  backdrop = loadImage('images/Arrowhead full canvas.png')
-  helicopter = loadImage('images/helicopter.pdf')
+  backdrop = loadImage('images/Arrowhead full canvas.png');
+  helicopter = loadImage('images/heli.png');
 }
 
 function setup() {

@@ -53,19 +53,14 @@ function createPlatform(x, y, width, height) {
 }
 
 function createAntagonists() {
-  console.log("Creating antagonists...");
   for (let i = 0; i < 10; i++) {
     let x = random(1000, 3500);
-    console.log(`Antagonist ${i}: Initial x = ${x}`);
     
-    let antagonist = createSprite(x, 210, 30, 30);
-    console.log(`Antagonist ${i}: After createSprite, x = ${antagonist.position.x}`);
-    
+    let antagonist = createSprite(x, 210, 30, 30);    
     antagonist.shapeColor = color(0, 0, 200);
     antagonist.velocity.x = random(-3, 3);
     antagonists.push(antagonist);
   }
-  console.log("Finished creating antagonists.");
 }
 
 function platformOn() {

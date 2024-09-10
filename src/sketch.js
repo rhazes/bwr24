@@ -1,11 +1,18 @@
 let sprite;
 let p1, p2, p3;
 let ground;
-let platforms = [];
 let curPlatform;
 let antagonists = [];
 let helicopter;
 let backdrop;
+let levelLength = 5000
+let xoffset = 0;
+let platforms;
+let plats = [
+	[100,50],
+	[150,75],
+	[400,300]
+]
 
 function preload() {
   backdrop = loadImage('images/Arrowhead full canvas.png');
@@ -22,26 +29,16 @@ function setup() {
   ground = createSprite(500,400,10000,10,'static');
 
   // Create initial platforms
-  createPlatform(300, 300, 70, 10);
-  createPlatform(100, 330, 70, 10);
-  createPlatform(200, 200, 70, 10);
-  createPlatform(400, 250, 100, 10);
-  createPlatform(600, 280, 80, 10);
-  createPlatform(800, 220, 90, 10);
-  createPlatform(1000, 300, 110, 10);
-  createPlatform(1200, 180, 75, 10);
-  createPlatform(1400, 260, 85, 10);
-  createPlatform(1600, 220, 95, 10);
-  createPlatform(1800, 290, 100, 10);
-  createPlatform(2000, 200, 80, 10);
-  createPlatform(2200, 270, 90, 10);
-  createPlatform(2400, 230, 105, 10);
-  createPlatform(2600, 280, 75, 10);
-  createPlatform(2800, 210, 85, 10);
-  createPlatform(3000, 250, 95, 10);
-  createPlatform(3200, 190, 100, 10);
-  createPlatform(3400, 240, 80, 10);
-  createPlatform(3600, 220, 90, 10);
+  platforms = new Group();
+	platforms.h = 15;
+	platforms.w = 50;
+	platforms.color = 'green';
+	
+	platformCount = 10;
+	for (let i=0; i < plats.length; ++i) {
+			let p = new platforms.Sprite(plats[i][0],plats[i][1]);
+      p.collider = 'static';
+	}
 
   sprite.friction = 0;
 	  noStroke();
@@ -52,11 +49,6 @@ function setup() {
   helicopter.shapeColor = color(0, 255, 0);
 }
 
-function createPlatform(x, y, width, height) {
-  let platform = createSprite(x, y, width, height, 'static');
-  platforms.push(platform);
-  return platform;
-}
 
 function createAntagonists() {
   for (let i = 0; i < 10; i++) {
@@ -70,8 +62,8 @@ function createAntagonists() {
 }
 
 function platformOn() {
-  for(i = 0; i < platforms.length; i++) {
-    if(sprite.collide(platforms[i])) {
+  for(i = 0; i < plats.length; i++) {
+    if(sprite.collide(plats[i])) {
       return i;
     }
   }
@@ -79,6 +71,32 @@ function platformOn() {
 }
 
 function draw() {
+
+  background('gray')
+	
+	if(kb.pressing('left')) {
+		camera.x -= 10;
+	}
+	if(kb.pressing('right')) {
+		camera.x += 10;
+	}	
+	
+	// print the x-axis
+	push()
+	stroke(200,0,0)
+	translate(-(camera.x - width * 0.5),0)
+	
+	for(let i=0; i < levelLength; i+= 50) {
+		text(i,i,height * .95);
+	}	
+	pop()
+	
+	// print the y-axis
+	stroke(200,0,0)
+	for(let i=50; i < height; i +=100) {
+		text(i,10,i)
+	}
+
   image(backdrop, 0, 0, width, height);
   screenX=sprite.position.x+200;
     

@@ -46,7 +46,7 @@ function setup() {
   world.gravity.y = 5; // Reduced from 7
 	
   sprite = createSprite(500, 200,30);
-  ground = createSprite(500,400,10000,10,'static');
+  ground = createSprite(500,400,50000,10,'static');
 
   // Create initial platforms
   platforms = new Group();
@@ -65,14 +65,14 @@ function setup() {
 
   createAntagonists();
 
-  helicopter = createSprite(game_end_x, 100, 60, 30);
+  helicopter = createSprite(3800, 100, 60, 30);
   helicopter.shapeColor = color(0, 255, 0);
 }
 
 
 function createAntagonists() {
-  for (let i = 0; i < 10; i++) {
-    let x = random(1000, 3500);
+  for (let i = 0; i < 20; i++) {
+    let x = random(1000, 5000);
     
     let antagonist = createSprite(x, 210, 30, 30);    
     antagonist.shapeColor = color(0, 0, 200);

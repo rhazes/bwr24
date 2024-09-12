@@ -8,10 +8,9 @@ let backdrop;
 let levelLength = 5000
 let xoffset = 0;
 let platforms;
+let game_end_x
 let plats = [
-	[100,50],
-	[150,75],
-	[400,300]
+
 ]
 
 function preload() {
@@ -20,8 +19,29 @@ function preload() {
 }
 
 function setup() {
+  randomSeed(1000000); // 99
 	createCanvas(1920,1080);
   rectMode(CENTER);
+
+  game_end_x = 7000;
+  for(let i = 150; i < game_end_x; i+= 150) {
+    let first_half = game_end_x / 2;
+    let three_quarters = game_end_x * (3/4);
+    
+    if(i < first_half) {
+        plats.push([i, random(300,380)]);
+      
+    }
+    else if(i < three_quarters) {
+      plats.push([i, random(200, 400)]);
+      plats.push([i, random(200, 400)]);
+    }
+    else {
+      plats.push([i, random(100, 400)]);
+      plats.push([i, random(100, 400)]);
+      plats.push([i, random(100, 400)]);
+    }
+  }
 
   world.gravity.y = 5; // Reduced from 7
 	

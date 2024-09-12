@@ -65,7 +65,7 @@ function setup() {
 
   createAntagonists();
 
-  helicopter = createSprite(3800, 100, 60, 30);
+  helicopter = createSprite(game_end_x, 100, 60, 30);
   helicopter.shapeColor = color(0, 255, 0);
 }
 

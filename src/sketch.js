@@ -13,9 +13,14 @@ let plats = [
 
 ]
 
+let forestFireSound; // Declare a variable for the sound
+let soundStarted = false; // Track if the sound has started (default is off)
+let invincible = false; // Track if the player is invincible
+
 function preload() {
   backdrop = loadImage('images/Arrowhead full canvas.png');
   helicopter = loadImage('images/heli.png');
+  forestFireSound = loadSound('audio/Forest Fire Sound Effect (Copyright Free).mp3'); // Load the sound
 }
 
 function setup() {
@@ -67,6 +72,9 @@ function setup() {
 
   helicopter = createSprite(3800, 100, 60, 30);
   helicopter.shapeColor = color(0, 255, 0);
+
+  forestFireSound.setLoop(true);
+  soundStarted = false; // Initialize as not started, but we'll change this soon
 }
 
 function createAntagonists() {//creates antagonists
@@ -143,22 +151,9 @@ function draw() {
   for (let i = antagonists.length - 1; i >= 0; i--) {
     updateAntagonist(antagonists[i]);
     
-    if (sprite.collide(antagonists[i])) {
-      let spriteBottom = sprite.position.y + sprite.height / 2;
-      let antagonistTop = antagonists[i].position.y - antagonists[i].height / 2;
-      
-      if (spriteBottom <= antagonistTop + 10) {  // Allow for a small overlap
-        // Player is on top of the antagonist
-        antagonists[i].remove();
-        antagonists.splice(i, 1);
-        console.log("You defeated an antagonist!");
-        // Add a small upward bounce
-        sprite.velocity.y = -5;
-      } else {
-        // Player hit the antagonist from the side or below
-        gameOver("An antagonist got you!");
-        return;  // Stop the game loop
-      }
+    if (!invincible && sprite.collide(antagonists[i])) { // Check invincibility
+      gameOver("An antagonist got you!");
+      return;  // Stop the game loop
     }
   }
 
@@ -169,12 +164,49 @@ function draw() {
 
   // Display player coordinates
   displayPlayerCoordinates();
+
+  // Display sound state
+  push();
+  textAlign(LEFT, TOP);
+  textSize(16);
+  fill(0);
+  text(`Sound: ${soundStarted ? (forestFireSound.isPlaying() ? "Playing" : "Paused") : "Off"}`, 
+       camera.position.x - width/2 + 10, camera.position.y - height/2 + 10);
+  pop();
+
+  if (!soundStarted) {
+    push();
+    textAlign(CENTER, CENTER);
+    textSize(24);
+    fill(255);
+    text("Click anywhere or press 'M' to start sound", width/2, height/2);
+    pop();
+  }
 }
 
 function keyPressed() {
   // Prevent default space bar behavior
   if (key === ' ') {
     return false; // Prevent scrolling down
+  }
+
+  // Toggle sound on "M" key press
+  if (key === 'm' || key === 'M') {
+    if (!soundStarted) {
+      startSound();
+    } else {
+      if (forestFireSound.isPlaying()) {
+        forestFireSound.pause();
+      } else {
+        forestFireSound.play();
+      }
+    }
+  }
+
+  // Make player invincible on "I" key press
+  if (key === 'i' || key === 'I') {
+    invincible = !invincible; // Toggle invincibility
+    console.log(`Invincibility: ${invincible}`);
   }
 
   // Debug When D is pressed
@@ -244,3 +276,14 @@ function displayPlayerCoordinates() {
   // Restore original drawing settings
   pop();
 }
+function startSound() {
+  if (!soundStarted) {
+    forestFireSound.play();
+    soundStarted = true;
+  }
+}
+
+function mousePressed() {
+  startSound();
+}
+

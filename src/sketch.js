@@ -91,51 +91,27 @@ function platformOn() {
 
 function draw() {
   background('gray');
-	
-	if(kb.pressing('left')) {
-		camera.x -= 10;
-	}
-	if(kb.pressing('right')) {
-		camera.x += 10;
-	}	
-	
-	// print the x-axis
-	push()
-	stroke(200,0,0)
-	translate(-(camera.x - width * 0.5),0)
-	
-	for(let i=0; i < levelLength; i+= 50) {
-		text(i,i,height * .95);
-	}	
-	pop()
-	
-	// print the y-axis
-	stroke(200,0,0)
-	for(let i=50; i < height; i +=100) {
-		text(i,10,i)
-	}
-
-  // Calculate the camera limits based on the backdrop width
-  let backdropWidth = 7046; // Use the actual width of your image
-  camera.position.x = constrain(sprite.position.x, width / 2, backdropWidth - width / 2);
 
   // Calculate the height to maintain aspect ratio
+  let backdropWidth = 7046; // Use the actual width of your image
   let backdropHeight = (backdropWidth / 7046) * 720; // Maintain original aspect ratio
 
-  // Draw the backdrop image centered
-  image(backdrop, -camera.position.x + width / 2 - backdropWidth / 2, 0, backdropWidth, backdropHeight);
+  // Draw the backdrop image tiled
+  let startX = -camera.position.x % backdropWidth;
+  for (let x = startX; x < width; x += backdropWidth) {
+    image(backdrop, x, 0, backdropWidth, backdropHeight);
+  }
 
-  screenX=sprite.position.x+200;
+  screenX = sprite.position.x + 200;
     
   camera.position.x = sprite.position.x;
-  camera.moveTo(sprite.position.x,540);
+  camera.moveTo(sprite.position.x, 540);
 
-  if (sprite.position.y > height-20) {
-    sprite.position.y = height-20;
+  if (sprite.position.y > height - 20) {
+    sprite.position.y = height - 20;
     sprite.velocity.y = 0;
   }
 
- 
   // Left and right movement
   if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) { // 65 is the keyCode for 'A'
     sprite.velocity.x = -5;
@@ -168,8 +144,8 @@ function draw() {
     updateAntagonist(antagonists[i]);
     
     if (sprite.collide(antagonists[i])) {
-      let spriteBottom = sprite.position.y + sprite.height/2;
-      let antagonistTop = antagonists[i].position.y - antagonists[i].height/2;
+      let spriteBottom = sprite.position.y + sprite.height / 2;
+      let antagonistTop = antagonists[i].position.y - antagonists[i].height / 2;
       
       if (spriteBottom <= antagonistTop + 10) {  // Allow for a small overlap
         // Player is on top of the antagonist

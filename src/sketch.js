@@ -70,7 +70,7 @@ function setup() {
 }
 
 
-function createAntagonists() {
+function createAntagonists() {//creates antagonists
   for (let i = 0; i < 20; i++) {
     let x = random(1000, 5000);
     

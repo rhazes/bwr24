@@ -24,27 +24,51 @@ function preload() {
 }
 
 function setup() {
-  randomSeed(1000000); // 99
+  randomSeed(55); // 99
 	createCanvas(1920,1080);
   rectMode(CENTER);
 
-  game_end_x = 7000;
+  game_end_x = 12000;
   for(let i = 150; i < game_end_x; i+= 150) {
-    let first_half = game_end_x / 2;
-    let three_quarters = game_end_x * (3/4);
+    let one_fifth = game_end_x * (1/5);
+    let two_fifth = game_end_x * (2/5);
+    let three_fifth = game_end_x * (3/5);
+    let four_fifth = game_end_x * (4/5);
     
-    if(i < first_half) {
-        plats.push([i, random(300,380)]);
+    if(i < one_fifth) {
+        plats.push([i+(one_fifth/5), random(140,380), random(70,140)]);
+        plats.push([i-(one_fifth/5), random(140,380), random(70,140)]);
       
     }
-    else if(i < three_quarters) {
-      plats.push([i, random(200, 400)]);
-      plats.push([i, random(200, 400)]);
+    else if(i < two_fifth) {
+      if(random(0,10) > 5) {
+        plats.push([i+(one_fifth/5), random(140,380), random(60,120)]);
+      }
+      if(random(0,10) > 5) {
+        plats.push([i-(one_fifth/5), random(140,380), random(60,120)]);
+      }
+    }
+    else if(i < three_fifth) {
+      if(random(0,10) < 3) {
+        plats.push([i+(one_fifth/5), random(140,380), random(40,80)]);
+      }
+      if(random(0,10) < 3) {
+        plats.push([i-(one_fifth/5), random(140,380), random(40,80)]);
+      }
+    }
+    else if(i < four_fifth) {
+      if(random(0,10) < 3) {
+        plats.push([i+(one_fifth/5), random(300,380), random(40,50)]);
+      }
+      if(random(0,10) < 3) {
+        plats.push([i-(one_fifth/5), random(300,380), random(40,50)]);
+      }
     }
     else {
-      plats.push([i, random(100, 400)]);
-      plats.push([i, random(100, 400)]);
-      plats.push([i, random(100, 400)]);
+      if(random(0,10) < 8) {
+        plats.push([i, random(300,380), random(10,20)]);
+        i -= 200;
+      }
     }
   }
 
@@ -61,7 +85,7 @@ function setup() {
 	
 	platformCount = 10;
 	for (let i=0; i < plats.length; ++i) {
-			let p = new platforms.Sprite(plats[i][0],plats[i][1]);
+			let p = new platforms.Sprite(plats[i][0],plats[i][1], plats[i][2], 15);
       p.collider = 'static';
 	}
 

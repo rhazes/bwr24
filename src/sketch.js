@@ -20,7 +20,7 @@ function preload() {
 
 function setup() {
   randomSeed(1000000); // 99
-	createCanvas(1920,1080);
+	createCanvas(1440,900);
   rectMode(CENTER);
 
   game_end_x = 7000;
@@ -93,6 +93,10 @@ function platformOn() {
 function draw() {
 
   background('gray')
+  let backgroundOffsetX = map(sprite.position.x, 0, game_end_x, 0, backdrop.width - width);
+  
+  // Display the appropriate portion of the background
+  image(backdrop, -backgroundOffsetX, 0, backdrop.width, height);
 	
 	if(kb.pressing('left')) {
 		camera.x -= 10;

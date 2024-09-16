@@ -69,7 +69,6 @@ function setup() {
   helicopter.shapeColor = color(0, 255, 0);
 }
 
-
 function createAntagonists() {//creates antagonists
   for (let i = 0; i < 20; i++) {
     let x = random(1000, 5000);
@@ -91,8 +90,7 @@ function platformOn() {
 }
 
 function draw() {
-
-  background('gray')
+  background('gray');
 	
 	if(kb.pressing('left')) {
 		camera.x -= 10;
@@ -117,7 +115,16 @@ function draw() {
 		text(i,10,i)
 	}
 
-  image(backdrop, 0, 0, width, height);
+  // Calculate the camera limits based on the backdrop width
+  let backdropWidth = 7046; // Use the actual width of your image
+  camera.position.x = constrain(sprite.position.x, width / 2, backdropWidth - width / 2);
+
+  // Calculate the height to maintain aspect ratio
+  let backdropHeight = (backdropWidth / 7046) * 720; // Maintain original aspect ratio
+
+  // Draw the backdrop image centered
+  image(backdrop, -camera.position.x + width / 2 - backdropWidth / 2, 0, backdropWidth, backdropHeight);
+
   screenX=sprite.position.x+200;
     
   camera.position.x = sprite.position.x;
@@ -189,10 +196,15 @@ function draw() {
 }
 
 function keyPressed() {
-    // Debug When D is pressed
-    if (key === 'd' || key === 'D') {
-        player.toggleDebugMode();
-    }
+  // Prevent default space bar behavior
+  if (key === ' ') {
+    return false; // Prevent scrolling down
+  }
+
+  // Debug When D is pressed
+  if (key === 'd' || key === 'D') {
+    player.toggleDebugMode();
+  }
 }
 
 function updateAntagonist(antagonist) {

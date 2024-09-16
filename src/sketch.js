@@ -90,16 +90,7 @@ function platformOn() {
 }
 
 function draw() {
-<<<<<<< HEAD
-
-  background('gray')
-    let backgroundOffsetX = map(sprite.position.x, 0, game_end_x, 0, backdrop.width - width);
-  
-  // Display the appropriate portion of the background
-  image(backdrop, -backgroundOffsetX, 0, backdrop.width, height);
-=======
   background('gray');
->>>>>>> main
 	
 	if(kb.pressing('left')) {
 		camera.x -= 10;

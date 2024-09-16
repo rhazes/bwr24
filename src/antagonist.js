@@ -1,49 +1,57 @@
-/*
-the baddie class
-*/
-//Antagonist position 
-var posX = 200;
-var posY = 200; 
-var pos2X = 100;
-var pos2Y = 100;
-function preload() {
-  img = loadImage('antagonistSpriteImage');
-  img2 = loadImage('mainCharacterImage')
-}
+let n = 100;
+let antagonist, emitter; 
 
+//Emitter based on frames passed
+class Emitter {
+	constructor(x,y, rate) {
+		this.x = x
+		this.y = y
+		this.rate = rate
+		this.nextEmitFrame = frameCount + rate
+	}
+	update() {
+		if(frameCount == this.nextEmitFrame) {
+			this.emit()
+			this.nextEmitFrame = frameCount + this.rate
+		}
+	}
+	emit() {
+		new antagonist.Sprite();
+	}
+}
 function setup() {
-  createCanvas(400, 400);
+  createCanvas(400, 400)
+	new Canvas(600,400);
+	world.gravity.y = 5;
+	
+	//normalDemo();
+	floor = new Sprite(width*0.5, height - 5, width, 10);
+	floor.color = 'black'
+	floor.collider = 's'
+	
+	antagonist = new Group()
+	antagonist.color = 'chartreuse';
+	antagonist.life = 100;
+	
+	emitter = new Emitter(300, 50, 60);
+	emitter.rate = 200;
 }
-
 function draw() {
-  background(220);
-  image(img, posX, posY)
-  image(img2, pos2X, pos2Y)
-  img.resize(0, 50)
-  img2.resize(0, 50)
-  posX = posX + random(-3, 3)
-  posY = posY + random(-3, 3)
-frameRate(20);
-  if(keyCode == UP_ARROW) {
-    pos2Y = pos2Y - 5; 
-  }
-  if(keyCode == DOWN_ARROW) {
-    pos2Y = pos2Y + 5; 
-  }
-  if(keyCode == RIGHT_ARROW) {
-    pos2X = pos2X + 5; 
-  }
-  if(keyCode == LEFT_ARROW) {
-    pos2X = pos2X - 5;
-  }
-  
-  posX = posX + int(random(-5, 5))
-  posY = posY + int(random(-5, 5))
-  
-  if(pos2X >= posX - 100 && pos2X <= posX + 100 && pos2Y >= posY - 100 && pos2Y <= posX + 5) {
-    text("GAME OVER", windowWidth / 4, windowHeight / 4);
-  }
-
-//game end
-
+	background('white')
+	emitter.update();
+	
+	if(frameCount % 300 == 0) {
+		emitter.rate -= 50;
+		emitter.rate = max(50, emitter.rate)
+	}
 }
+
+//Implemented based on this article
+//https://web.archive.org/web/20140527034930/http://www.protonfish.com/random.shtml
+function guassian(mean,std) {
+	let gauss = random(-1,1) + random(-1,1) + random(-1,1);
+	return gauss*std + mean;
+}
+
+setup()
+

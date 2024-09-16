@@ -13,10 +13,13 @@ let plats = [
 	[150,75],
 	[400,300]
 ]
-
 function preload() {
   backdrop = loadImage('images/Arrowhead full canvas.png');
   helicopter = loadImage('images/heli.png');
+
+  deerAni = loadAnimation(['images/deer.png']); //this worked
+  deerImg = loadImage('images/deer.png')
+
 }
 
 function setup() {
@@ -25,7 +28,19 @@ function setup() {
 
   world.gravity.y = 5; // Reduced from 7
 	
-  sprite = createSprite(500, 200,30);
+  sprite = createSprite(500, 200, 30);
+  sprite.addAni(deerAni); //this worked
+  sprite.spriteSheet = deerImg;
+  sprite.w = 30
+  sprite.h = 30
+  sprite.addAnis(
+    {
+      right: {row:2, frames:5},
+      left:{row:3, frames:5},
+      down:{row:0, frames:5},
+      up:{row:1, frames:5},
+    }
+  )
   ground = createSprite(500,400,10000,10,'static');
 
   // Create initial platforms
@@ -54,7 +69,8 @@ function createAntagonists() {
   for (let i = 0; i < 10; i++) {
     let x = random(1000, 3500);
     
-    let antagonist = createSprite(x, 210, 30, 30);    
+    let antagonist = createSprite(x, 210, 30, 30);  
+    //antagonist.rotate(20)   
     antagonist.shapeColor = color(0, 0, 200);
     antagonist.velocity.x = random(-3, 3);
     antagonists.push(antagonist);

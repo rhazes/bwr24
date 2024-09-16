@@ -69,7 +69,6 @@ function setup() {
   helicopter.shapeColor = color(0, 255, 0);
 }
 
-
 function createAntagonists() {//creates antagonists
   for (let i = 0; i < 20; i++) {
     let x = random(1000, 5000);
@@ -91,12 +90,16 @@ function platformOn() {
 }
 
 function draw() {
+<<<<<<< HEAD
 
   background('gray')
     let backgroundOffsetX = map(sprite.position.x, 0, game_end_x, 0, backdrop.width - width);
   
   // Display the appropriate portion of the background
   image(backdrop, -backgroundOffsetX, 0, backdrop.width, height);
+=======
+  background('gray');
+>>>>>>> main
 	
 	if(kb.pressing('left')) {
 		camera.x -= 10;
@@ -202,10 +205,6 @@ function draw() {
 }
 
 function keyPressed() {
-    // Debug When D is pressed
-    if (key === 'd' || key === 'D') {
-        player.toggleDebugMode();
-    }
   // Prevent default space bar behavior
   if (key === ' ') {
     return false; // Prevent scrolling down

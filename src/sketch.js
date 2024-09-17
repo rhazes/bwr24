@@ -8,40 +8,48 @@ let backdrop;
 let levelLength = 5000
 let xoffset = 0;
 let platforms;
+let game_end_x
 let plats = [
-	[100,50],
-	[150,75],
-	[400,300]
+
 ]
+let fireAni;
+
 function preload() {
   backdrop = loadImage('images/Arrowhead full canvas.png');
   helicopter = loadImage('images/heli.png');
-
-  deerAni = loadAnimation(['images/deer.png']); //this worked
-  deerImg = loadImage('images/deer.png')
-
+  fireAni = loadAnimation('images/antagonist.png', {frameSize: [72, 180], frames: 5}); //this worked
+  fireImg = loadImage('images/antagonist.png')
 }
 
 function setup() {
+  randomSeed(1000000); // 99
 	createCanvas(1920,1080);
   rectMode(CENTER);
 
+  game_end_x = 7000;
+  for(let i = 150; i < game_end_x; i+= 150) {
+    let first_half = game_end_x / 2;
+    let three_quarters = game_end_x * (3/4);
+    
+    if(i < first_half) {
+        plats.push([i, random(300,380)]);
+      
+    }
+    else if(i < three_quarters) {
+      plats.push([i, random(200, 400)]);
+      plats.push([i, random(200, 400)]);
+    }
+    else {
+      plats.push([i, random(100, 400)]);
+      plats.push([i, random(100, 400)]);
+      plats.push([i, random(100, 400)]);
+    }
+  }
+
   world.gravity.y = 5; // Reduced from 7
 	
-  sprite = createSprite(500, 200, 30);
-  sprite.addAni(deerAni); //this worked
-  sprite.spriteSheet = deerImg;
-  sprite.w = 30
-  sprite.h = 30
-  sprite.addAnis(
-    {
-      right: {row:2, frames:5},
-      left:{row:3, frames:5},
-      down:{row:0, frames:5},
-      up:{row:1, frames:5},
-    }
-  )
-  ground = createSprite(500,400,10000,10,'static');
+  sprite = createSprite(500, 200,30);
+  ground = createSprite(500,400,50000,10,'static');
 
   // Create initial platforms
   platforms = new Group();
@@ -65,12 +73,23 @@ function setup() {
 }
 
 
-function createAntagonists() {
-  for (let i = 0; i < 10; i++) {
-    let x = random(1000, 3500);
+function createAntagonists() {//creates antagonists
+  for (let i = 0; i < 20; i++) {
+    let x = random(1000, 5000);
     
-    let antagonist = createSprite(x, 210, 30, 30);  
-    //antagonist.rotate(20)   
+    let antagonist = createSprite(x, 210, 30, 30);
+    antagonist.addAni(fireAni); //this worked
+  antagonist.spriteSheet = fireImg;
+  antagonist.w = 30
+  antagonist.h = 30
+  antagonist.addAnis(
+    {
+      right: {row: 1, frames:5},
+      left:{row: 1, frames: 5},
+      //down:{row:1, frames:5},
+      //up:{row:1, frames: 5},
+    }
+  )    
     antagonist.shapeColor = color(0, 0, 200);
     antagonist.velocity.x = random(-3, 3);
     antagonists.push(antagonist);
@@ -153,7 +172,7 @@ function draw() {
   sprite.color = color(200, 0, 0);
 
   // Update and check collision for all antagonists
-  for (let i = antagonists.length - 1; i >= 0; i--) {
+  /*for (let i = antagonists.length - 1; i >= 0; i--) {
     updateAntagonist(antagonists[i]);
     
     if (sprite.collide(antagonists[i])) {
@@ -173,7 +192,9 @@ function draw() {
         return;  // Stop the game loop
       }
     }
-  }
+  }*/
+
+    animation(fireAni, 100, 100)
 
   // Check for collision with helicopter
   if (sprite.collide(helicopter)) {

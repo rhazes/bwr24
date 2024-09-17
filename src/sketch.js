@@ -84,12 +84,13 @@ function createAntagonists() {//creates antagonists
   antagonist.h = 30
   antagonist.addAnis(
     {
-      right: {row: 1, frames:5},
-      left:{row: 1, frames: 5},
+      right: {row: 14.5, frames:5},
+      left:{row: 14.5, frames: 5},
       //down:{row:1, frames:5},
       //up:{row:1, frames: 5},
     }
-  )    
+  )  
+  animation(fireAni, 72, 180)  
     antagonist.shapeColor = color(0, 0, 200);
     antagonist.velocity.x = random(-3, 3);
     antagonists.push(antagonist);
@@ -172,7 +173,7 @@ function draw() {
   sprite.color = color(200, 0, 0);
 
   // Update and check collision for all antagonists
-  /*for (let i = antagonists.length - 1; i >= 0; i--) {
+  for (let i = antagonists.length - 1; i >= 0; i--) {
     updateAntagonist(antagonists[i]);
     
     if (sprite.collide(antagonists[i])) {
@@ -192,9 +193,8 @@ function draw() {
         return;  // Stop the game loop
       }
     }
-  }*/
+  }
 
-    animation(fireAni, 100, 100)
 
   // Check for collision with helicopter
   if (sprite.collide(helicopter)) {

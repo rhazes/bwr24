@@ -85,8 +85,13 @@ function setup() {
 	
 	platformCount = 10;
 	for (let i=0; i < plats.length; ++i) {
-			let p = new platforms.Sprite(plats[i][0],plats[i][1], plats[i][2], 15);
-      p.collider = 'static';
+      if(i != 13 &&  i != 18 && i!= 6 && i!= 12 && i!= 20 && i!= 23 && i!= 14 && i!= 16 && i!= 2 && i!= 36 && i!= 37 && i!= 47) {
+			  let p = new platforms.Sprite(plats[i][0],plats[i][1], plats[i][2], 15);
+        p.collider = 'static';
+      }
+      else {
+        let p = new platforms.Sprite(0,0,0,0)
+      }
 	}
 
   sprite.friction = 0;
@@ -114,8 +119,8 @@ function createAntagonists() {//creates antagonists
 }
 
 function platformOn() {
-  for(i = 0; i < plats.length; i++) {
-    if(sprite.collide(plats[i])) {
+  for(let i = 0; i < platforms.length; i++) {
+    if(sprite.collide(platforms[i])) {
       return i;
     }
   }
@@ -124,6 +129,11 @@ function platformOn() {
 
 function draw() {
   background('gray');
+  
+  let temp = platformOn();
+  if(temp != -1) {
+    print(temp);
+  }
 
   // Calculate the height to maintain aspect ratio
   let backdropWidth = 7046; // Use the actual width of your image

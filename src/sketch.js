@@ -172,13 +172,34 @@ function draw() {
 
   sprite.color = color(200, 0, 0);
 
-  // Update and check collision for all antagonists
+  // // Update and check collision for all antagonists
+  // for (let i = antagonists.length - 1; i >= 0; i--) {
+  //   updateAntagonist(antagonists[i]);
+    
+  //   if (!invincible && sprite.collide(antagonists[i])) { // Check invincibility
+  //     gameOver("An antagonist got you!");
+  //     return;  // Stop the game loop
+  //   }
+  // }
   for (let i = antagonists.length - 1; i >= 0; i--) {
     updateAntagonist(antagonists[i]);
     
-    if (!invincible && sprite.collide(antagonists[i])) { // Check invincibility
-      gameOver("An antagonist got you!");
-      return;  // Stop the game loop
+    if (sprite.collide(antagonists[i])) {
+      let spriteBottom = sprite.position.y + sprite.height/2;
+      let antagonistTop = antagonists[i].position.y - antagonists[i].height/2;
+      
+      if (spriteBottom <= antagonistTop + 10) {  // Allow for a small overlap
+        // Player is on top of the antagonist
+        antagonists[i].remove();
+        antagonists.splice(i, 1);
+        console.log("You defeated an antagonist!");
+        // Add a small upward bounce
+        sprite.velocity.y = -5;
+      } else {
+        // Player hit the antagonist from the side or below
+        gameOver("An antagonist got you!");
+        return;  // Stop the game loop
+      }
     }
   }
 

@@ -104,7 +104,7 @@ function setup() {
 function createAntagonists() {//creates antagonists
   for (let i = 0; i < 20; i++) {
     let x = random(1000, 5000);
-    let y = random(220, 600);
+    let y = random(0, 360);
     
     let antagonist = createSprite(x, y, 30, 30);    
     antagonist.shapeColor = color(0, 0, 200);

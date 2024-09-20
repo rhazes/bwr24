@@ -142,10 +142,10 @@ function platformOn() {
 function draw() {
   background('gray');
   
-  let temp = platformOn();
-  if(temp != -1) {
-    print(temp);
-  }
+  // let temp = platformOn();
+  // if(temp != -1) {
+  //   print(temp);
+  // }
 
   // Calculate the height to maintain aspect ratio
   let backdropWidth = 7046; // Use the actual width of your image

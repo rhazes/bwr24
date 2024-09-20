@@ -8,6 +8,7 @@ let levelLength = 5000
 let xoffset = 0;
 let platforms;
 let game_end_x
+let fps;
 let plats = [
 
 ]
@@ -32,6 +33,8 @@ function setup() {
   randomSeed(55); // 99
 	createCanvas(1920,1080);
   rectMode(CENTER);
+  frameRate(60)
+  fps = 0;
 
   game_end_x = 12000;
   for(let i = 150; i < game_end_x; i+= 150) {
@@ -142,6 +145,8 @@ function platformOn() {
 
 function draw() {
   background('gray');
+  fps = Math.round(frameRate());
+  
   
   // let temp = platformOn();
   // if(temp != -1) {
@@ -160,8 +165,8 @@ function draw() {
 
   screenX = sprite.position.x + 200;
     
-  camera.position.x = sprite.position.x;
-  camera.moveTo(sprite.position.x, 540);
+  // camera.position.x = sprite.position.x;
+  // camera.moveTo(sprite.position.x, 540);
 
   if (sprite.position.y > height - 20) {
     sprite.position.y = height - 20;
@@ -251,7 +256,22 @@ function draw() {
     text("Click anywhere or press 'M' to start sound", width/2, height/2);
     pop();
   }
+  camera.position.x = sprite.position.x;
+  camera.moveTo(sprite.position.x, 540);
+  displayFPS();
 }
+
+function displayFPS() {
+  push();
+  textAlign(LEFT, TOP);
+  textSize(16);
+  fill(255); // Change to white for better visibility
+  stroke(0); // Add black outline
+  strokeWeight(2);
+  text(`FPS: ${fps}`, camera.position.x - width/2 + 10, camera.position.y - height/2 + 30);
+  pop();
+}
+
 
 function keyPressed() {
   // Prevent default space bar behavior

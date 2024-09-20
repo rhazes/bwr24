@@ -2,7 +2,6 @@ let sprite;
 let p1, p2, p3;
 let ground;
 let curPlatform;
-let antagonists = [];
 let helicopter;
 let backdrop;
 let levelLength = 5000
@@ -16,11 +15,17 @@ let plats = [
 let forestFireSound; // Declare a variable for the sound
 let soundStarted = false; // Track if the sound has started (default is off)
 let invincible = false; // Track if the player is invincible
+let fireAni;
+let antagonistGroup;
 
 function preload() {
   backdrop = loadImage('images/Arrowhead full canvas.png');
   helicopter = loadImage('images/heli.png');
   forestFireSound = loadSound('audio/Forest Fire Sound Effect (Copyright Free).mp3'); // Load the sound
+
+  fireAni = loadAnimation("images/fire.png", 
+    {frameSize:[180,176], frames:5});
+  fireAni.frameDelay = 10; // 4 is default; 1 is fastest
 }
 
 function setup() {
@@ -98,6 +103,7 @@ function setup() {
 	  noStroke();
 
   createAntagonists();
+  spawnAntagonist(100,100);
 
   helicopter = createSprite(3800, 100, 60, 30);
   helicopter.shapeColor = color(0, 255, 0);
@@ -106,17 +112,23 @@ function setup() {
   soundStarted = false; // Initialize as not started, but we'll change this soon
 }
 
-function createAntagonists() {//creates antagonists
-  for (let i = 0; i < 20; i++) {
-    let x = random(1000, 5000);
-    let y = random(-100, 360);
-    
-    let antagonist = createSprite(x, y, 30, 30);    
-    antagonist.shapeColor = color(0, 0, 200);
-    antagonist.velocity.x = random(-3, 3);
-    antagonists.push(antagonist);
-  }
+
+
+function spawnAntagonist(x,y) {
+  let a = new antagonistGroup.Sprite(x,y);
+  a.speed = 5; //random(-3,-3);
+  a.direction = 180;
+  a.scale.x = 0.5;
+  a.scale.y = 0.5;
+  a.life = 300;
 }
+
+function createAntagonists() {//creates antagonists
+  antagonistGroup = new Group();
+  antagonistGroup.addAni(fireAni); 
+  antagonistGroup.diameter = 100;
+}
+
 
 function platformOn() {
   for(let i = 0; i < platforms.length; i++) {
@@ -191,27 +203,27 @@ function draw() {
   //     return;  // Stop the game loop
   //   }
   // }
-  for (let i = antagonists.length - 1; i >= 0; i--) {
-    updateAntagonist(antagonists[i]);
+  // for (let i = antagonists.length - 1; i >= 0; i--) {
+  //   updateAntagonist(antagonists[i]);
     
-    if (sprite.collide(antagonists[i])) {
-      let spriteBottom = sprite.position.y + sprite.height/2;
-      let antagonistTop = antagonists[i].position.y - antagonists[i].height/2;
+  //   if (sprite.collide(antagonists[i])) {
+  //     let spriteBottom = sprite.position.y + sprite.height/2;
+  //     let antagonistTop = antagonists[i].position.y - antagonists[i].height/2;
       
-      if (spriteBottom <= antagonistTop + 10) {  // Allow for a small overlap
-        // Player is on top of the antagonist
-        antagonists[i].remove();
-        antagonists.splice(i, 1);
-        console.log("You defeated an antagonist!");
-        // Add a small upward bounce
-        sprite.velocity.y = -5;
-      } else {
-        // Player hit the antagonist from the side or below
-        gameOver("An antagonist got you!");
-        return;  // Stop the game loop
-      }
-    }
-  }
+  //     if (spriteBottom <= antagonistTop + 10) {  // Allow for a small overlap
+  //       // Player is on top of the antagonist
+  //       antagonists[i].remove();
+  //       antagonists.splice(i, 1);
+  //       console.log("You defeated an antagonist!");
+  //       // Add a small upward bounce
+  //       sprite.velocity.y = -5;
+  //     } else {
+  //       // Player hit the antagonist from the side or below
+  //       gameOver("An antagonist got you!");
+  //       return;  // Stop the game loop
+  //     }
+  //   }
+  // }
 
   // Check for collision with helicopter
   if (sprite.collide(helicopter)) {
@@ -271,22 +283,22 @@ function keyPressed() {
   }
 }
 
-function updateAntagonist(antagonist) {
-  if (antagonist && !antagonist.removed) {
-    // Random movement
-    if (frameCount % 60 === 0) {
-      antagonist.velocity.x = random(-5, 5);
-    }
+// function updateAntagonist(antagonist) {
+//   if (antagonist && !antagonist.removed) {
+//     // Random movement
+//     if (frameCount % 60 === 0) {
+//       antagonist.velocity.x = random(-5, 5);
+//     }
 
-    // Keep on ground
-    antagonist.collide(ground);
+//     // Keep on ground
+//     antagonist.collide(ground);
 
 
 
-    // Prevent flipping over
-    antagonist.rotation = 0;
-  }
-}
+//     // Prevent flipping over
+//     antagonist.rotation = 0;
+//   }
+// }
 
 function gameOver(message) {
   // Handle game over state

@@ -120,13 +120,14 @@ function spawnAntagonist(x,y) {
   a.direction = 180;
   a.scale.x = 0.5;
   a.scale.y = 0.5;
-  a.life = 300;
+  // a.life = 300;
 }
 
 function createAntagonists() {//creates antagonists
   antagonistGroup = new Group();
   antagonistGroup.addAni(fireAni); 
   antagonistGroup.diameter = 100;
+  antagonistGroup.rotationLock = false;
 }
 
 

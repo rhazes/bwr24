@@ -13,33 +13,62 @@ let plats = [
 
 ]
 
+let forestFireSound; // Declare a variable for the sound
+let soundStarted = false; // Track if the sound has started (default is off)
+let invincible = false; // Track if the player is invincible
+
 function preload() {
   backdrop = loadImage('images/Arrowhead full canvas.png');
   helicopter = loadImage('images/heli.png');
+  forestFireSound = loadSound('audio/Forest Fire Sound Effect (Copyright Free).mp3'); // Load the sound
 }
 
 function setup() {
-  randomSeed(1000000); // 99
-	createCanvas(1440,900);
+  randomSeed(55); // 99
+	createCanvas(1920,1080);
   rectMode(CENTER);
 
-  game_end_x = 7000;
+  game_end_x = 12000;
   for(let i = 150; i < game_end_x; i+= 150) {
-    let first_half = game_end_x / 2;
-    let three_quarters = game_end_x * (3/4);
+    let one_fifth = game_end_x * (1/5);
+    let two_fifth = game_end_x * (2/5);
+    let three_fifth = game_end_x * (3/5);
+    let four_fifth = game_end_x * (4/5);
     
-    if(i < first_half) {
-        plats.push([i, random(300,380)]);
+    if(i < one_fifth) {
+        plats.push([i+(one_fifth/5), random(140,380), random(70,140)]);
+        plats.push([i-(one_fifth/5), random(140,380), random(70,140)]);
       
     }
-    else if(i < three_quarters) {
-      plats.push([i, random(200, 400)]);
-      plats.push([i, random(200, 400)]);
+    else if(i < two_fifth) {
+      if(random(0,10) > 5) {
+        plats.push([i+(one_fifth/5), random(140,380), random(60,120)]);
+      }
+      if(random(0,10) > 5) {
+        plats.push([i-(one_fifth/5), random(140,380), random(60,120)]);
+      }
+    }
+    else if(i < three_fifth) {
+      if(random(0,10) < 3) {
+        plats.push([i+(one_fifth/5), random(140,380), random(40,80)]);
+      }
+      if(random(0,10) < 3) {
+        plats.push([i-(one_fifth/5), random(140,380), random(40,80)]);
+      }
+    }
+    else if(i < four_fifth) {
+      if(random(0,10) < 3) {
+        plats.push([i+(one_fifth/5), random(300,380), random(40,50)]);
+      }
+      if(random(0,10) < 3) {
+        plats.push([i-(one_fifth/5), random(300,380), random(40,50)]);
+      }
     }
     else {
-      plats.push([i, random(100, 400)]);
-      plats.push([i, random(100, 400)]);
-      plats.push([i, random(100, 400)]);
+      if(random(0,10) < 8) {
+        plats.push([i, random(300,380), random(10,20)]);
+        i -= 200;
+      }
     }
   }
 
@@ -56,7 +85,7 @@ function setup() {
 	
 	platformCount = 10;
 	for (let i=0; i < plats.length; ++i) {
-			let p = new platforms.Sprite(plats[i][0],plats[i][1]);
+			let p = new platforms.Sprite(plats[i][0],plats[i][1], plats[i][2], 15);
       p.collider = 'static';
 	}
 
@@ -67,13 +96,17 @@ function setup() {
 
   helicopter = createSprite(3800, 100, 60, 30);
   helicopter.shapeColor = color(0, 255, 0);
+
+  forestFireSound.setLoop(true);
+  soundStarted = false; // Initialize as not started, but we'll change this soon
 }
 
 function createAntagonists() {//creates antagonists
   for (let i = 0; i < 20; i++) {
     let x = random(1000, 5000);
+    let y = random(-100, 360);
     
-    let antagonist = createSprite(x, 210, 30, 30);    
+    let antagonist = createSprite(x, y, 30, 30);    
     antagonist.shapeColor = color(0, 0, 200);
     antagonist.velocity.x = random(-3, 3);
     antagonists.push(antagonist);
@@ -91,51 +124,27 @@ function platformOn() {
 
 function draw() {
   background('gray');
-	
-	if(kb.pressing('left')) {
-		camera.x -= 10;
-	}
-	if(kb.pressing('right')) {
-		camera.x += 10;
-	}	
-	
-	// print the x-axis
-	push()
-	stroke(200,0,0)
-	translate(-(camera.x - width * 0.5),0)
-	
-	for(let i=0; i < levelLength; i+= 50) {
-		text(i,i,height * .95);
-	}	
-	pop()
-	
-	// print the y-axis
-	stroke(200,0,0)
-	for(let i=50; i < height; i +=100) {
-		text(i,10,i)
-	}
-
-  // Calculate the camera limits based on the backdrop width
-  let backdropWidth = 7046; // Use the actual width of your image
-  camera.position.x = constrain(sprite.position.x, width / 2, backdropWidth - width / 2);
 
   // Calculate the height to maintain aspect ratio
+  let backdropWidth = 7046; // Use the actual width of your image
   let backdropHeight = (backdropWidth / 7046) * 720; // Maintain original aspect ratio
 
-  // Draw the backdrop image centered
-  image(backdrop, -camera.position.x + width / 2 - backdropWidth / 2, 0, backdropWidth, backdropHeight);
+  // Draw the backdrop image tiled
+  let startX = -camera.position.x % backdropWidth;
+  for (let x = startX; x < width; x += backdropWidth) {
+    image(backdrop, x, 0, backdropWidth, backdropHeight);
+  }
 
-  screenX=sprite.position.x+200;
+  screenX = sprite.position.x + 200;
     
   camera.position.x = sprite.position.x;
-  camera.moveTo(sprite.position.x,540);
+  camera.moveTo(sprite.position.x, 540);
 
-  if (sprite.position.y > height-20) {
-    sprite.position.y = height-20;
+  if (sprite.position.y > height - 20) {
+    sprite.position.y = height - 20;
     sprite.velocity.y = 0;
   }
 
- 
   // Left and right movement
   if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) { // 65 is the keyCode for 'A'
     sprite.velocity.x = -5;
@@ -163,7 +172,15 @@ function draw() {
 
   sprite.color = color(200, 0, 0);
 
-  // Update and check collision for all antagonists
+  // // Update and check collision for all antagonists
+  // for (let i = antagonists.length - 1; i >= 0; i--) {
+  //   updateAntagonist(antagonists[i]);
+    
+  //   if (!invincible && sprite.collide(antagonists[i])) { // Check invincibility
+  //     gameOver("An antagonist got you!");
+  //     return;  // Stop the game loop
+  //   }
+  // }
   for (let i = antagonists.length - 1; i >= 0; i--) {
     updateAntagonist(antagonists[i]);
     
@@ -193,12 +210,49 @@ function draw() {
 
   // Display player coordinates
   displayPlayerCoordinates();
+
+  // Display sound state
+  push();
+  textAlign(LEFT, TOP);
+  textSize(16);
+  fill(0);
+  text(`Sound: ${soundStarted ? (forestFireSound.isPlaying() ? "Playing" : "Paused") : "Off"}`, 
+       camera.position.x - width/2 + 10, camera.position.y - height/2 + 10);
+  pop();
+
+  if (!soundStarted) {
+    push();
+    textAlign(CENTER, CENTER);
+    textSize(24);
+    fill(255);
+    text("Click anywhere or press 'M' to start sound", width/2, height/2);
+    pop();
+  }
 }
 
 function keyPressed() {
   // Prevent default space bar behavior
   if (key === ' ') {
     return false; // Prevent scrolling down
+  }
+
+  // Toggle sound on "M" key press
+  if (key === 'm' || key === 'M') {
+    if (!soundStarted) {
+      startSound();
+    } else {
+      if (forestFireSound.isPlaying()) {
+        forestFireSound.pause();
+      } else {
+        forestFireSound.play();
+      }
+    }
+  }
+
+  // Make player invincible on "I" key press
+  if (key === 'i' || key === 'I') {
+    invincible = !invincible; // Toggle invincibility
+    console.log(`Invincibility: ${invincible}`);
   }
 
   // Debug When D is pressed
@@ -268,3 +322,14 @@ function displayPlayerCoordinates() {
   // Restore original drawing settings
   pop();
 }
+function startSound() {
+  if (!soundStarted) {
+    forestFireSound.play();
+    soundStarted = true;
+  }
+}
+
+function mousePressed() {
+  startSound();
+}
+

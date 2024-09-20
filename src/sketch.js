@@ -288,6 +288,15 @@ function gameOver(message) {
   textSize(32);
   fill(255, 0, 0);
   text("Game Over: " + message, width / 2, height / 2);
+  
+  // Create a refresh button
+  let refreshButton = createButton('Refresh Game');
+  refreshButton.position(width / 2 - 60, height / 2 + 40); // Position the button below the message
+  refreshButton.mousePressed(refreshGame); // Set the button's action
+}
+
+function refreshGame() {
+  location.reload(); // Refresh the page to restart the game
 }
 
 function winGame(message) {

@@ -127,7 +127,7 @@ function createAntagonists() {//creates antagonists
   antagonistGroup = new Group();
   antagonistGroup.addAni(fireAni); 
   antagonistGroup.diameter = 100;
-  antagonistGroup.rotationLock = false;
+  antagonistGroup.rotationLock = true;
 }
 
 

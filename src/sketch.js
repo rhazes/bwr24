@@ -7,7 +7,7 @@ let backdrop;
 let levelLength = 5000
 let xoffset = 0;
 let platforms;
-let game_end_x
+let game_end_x = 12000
 let fps;
 let plats = [
 
@@ -18,6 +18,11 @@ let soundStarted = false; // Track if the sound has started (default is off)
 let invincible = false; // Track if the player is invincible
 let fireAni;
 let antagonistGroup;
+let antagonistSpawnCycle = [80,60,50,30];  //in frames; the number of frames between antagonist spawning
+let antagonistSpawnHeight = [-50,200,300];  // the fire will spawn at these heights alternately
+let antagonistSpawnIndex = 0;  // index into the spawnHeights
+let spawnIntervalFactor = Math.floor(game_end_x / antagonistSpawnCycle.length);
+let antagonistLife = 500; // in frames
 
 function preload() {
   backdrop = loadImage('images/Arrowhead full canvas.png');
@@ -36,7 +41,6 @@ function setup() {
   frameRate(60)
   fps = 0;
 
-  game_end_x = 12000;
   for(let i = 150; i < game_end_x; i+= 150) {
     let one_fifth = game_end_x * (1/5);
     let two_fifth = game_end_x * (2/5);
@@ -82,9 +86,9 @@ function setup() {
 
   world.gravity.y = 5; // Reduced from 7
 	
-  sprite = createSprite(500, 200,30);
+  sprite = createSprite(100, 200,30);
   ground = createSprite(500,400,50000,10,'static');
-
+  // ground.friction = 0;
   // Create initial platforms
   platforms = new Group();
 	platforms.h = 15;
@@ -105,32 +109,72 @@ function setup() {
   sprite.friction = 0;
 	  noStroke();
 
+  
   createAntagonists();
-  spawnAntagonist(100,100);
+  // spawnAntagonist(100,100,2);
+  // spawnAntagonist(110,110)
+
+  //setup collision with the antagonist
+  sprite.collides(antagonistGroup, antagonistCollision);
 
   helicopter = createSprite(3800, 100, 60, 30);
   helicopter.shapeColor = color(0, 255, 0);
+  helicopter.speed = 0;
+  helicopter.rotationLock = true;
 
   forestFireSound.setLoop(true);
   soundStarted = false; // Initialize as not started, but we'll change this soon
 }
 
+function antagonistCollision(player, fire) {
+  let spriteBottom = player.position.y + player.height/2;
+  let antagonistTop = fire.position.y - fire.height/2;
+  // console.log("sprite y = ",spriteBottom, "fire top=", antagonistTop);
+  if (spriteBottom <= antagonistTop + 10) {  // Allow for a small overlap
+    fire.remove();
+  } else {
+    gameOver("You didn't make it!!");
+  }
 
-
-function spawnAntagonist(x,y) {
-  let a = new antagonistGroup.Sprite(x,y);
-  a.speed = 5; //random(-3,-3);
-  a.direction = 180;
-  a.scale.x = 0.5;
-  a.scale.y = 0.5;
-  // a.life = 300;
 }
 
-function createAntagonists() {//creates antagonists
+function spawnAntagonist() {
+
+  // adjust the spawn rate as the 
+  // 4000 is the approx x location of the helicopter
+  
+
+  let xRegion = floor(sprite.x / spawnIntervalFactor);
+  xRegion = constrain(xRegion,0,antagonistSpawnCycle.length);
+
+  if(frameCount % antagonistSpawnCycle[xRegion] == 0) {
+    let motion = random([-2,-1.5,-1.0,-0.5,0.5,1.0,1.5,2.0]); 
+    let _x = sprite.x + 400; 
+    let _y = antagonistSpawnHeight[antagonistSpawnIndex % antagonistSpawnHeight.length];
+
+    let a = new antagonistGroup.Sprite(_x,_y);
+
+    a.speed = Math.sign(motion) * 2; //random(-3,-3);
+    a.direction = 180;
+    a.scale.x = 0.5;
+    a.scale.y = 0.5;
+    // set the x update value for this antagonit
+    a.motion = motion;
+    a.update = () => {
+      a.x -= a.motion;
+    }
+
+    antagonistSpawnIndex++;
+  }
+}
+
+function createAntagonists() {//creates antagonists Group
   antagonistGroup = new Group();
   antagonistGroup.addAni(fireAni); 
   antagonistGroup.diameter = 100;
   antagonistGroup.rotationLock = true;
+  antagonistGroup.overlaps(antagonistGroup); 
+  antagonistGroup.life = antagonistLife; 
 }
 
 
@@ -200,36 +244,7 @@ function draw() {
 
   sprite.color = color(200, 0, 0);
 
-  // // Update and check collision for all antagonists
-  // for (let i = antagonists.length - 1; i >= 0; i--) {
-  //   updateAntagonist(antagonists[i]);
-    
-  //   if (!invincible && sprite.collide(antagonists[i])) { // Check invincibility
-  //     gameOver("An antagonist got you!");
-  //     return;  // Stop the game loop
-  //   }
-  // }
-  // for (let i = antagonists.length - 1; i >= 0; i--) {
-  //   updateAntagonist(antagonists[i]);
-    
-  //   if (sprite.collide(antagonists[i])) {
-  //     let spriteBottom = sprite.position.y + sprite.height/2;
-  //     let antagonistTop = antagonists[i].position.y - antagonists[i].height/2;
-      
-  //     if (spriteBottom <= antagonistTop + 10) {  // Allow for a small overlap
-  //       // Player is on top of the antagonist
-  //       antagonists[i].remove();
-  //       antagonists.splice(i, 1);
-  //       console.log("You defeated an antagonist!");
-  //       // Add a small upward bounce
-  //       sprite.velocity.y = -5;
-  //     } else {
-  //       // Player hit the antagonist from the side or below
-  //       gameOver("An antagonist got you!");
-  //       return;  // Stop the game loop
-  //     }
-  //   }
-  // }
+  spawnAntagonist();
 
   // Check for collision with helicopter
   if (sprite.collide(helicopter)) {
@@ -300,6 +315,7 @@ function keyPressed() {
 
   // Debug When D is pressed
 }
+
 
 // function updateAntagonist(antagonist) {
 //   if (antagonist && !antagonist.removed) {

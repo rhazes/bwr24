@@ -251,42 +251,9 @@ function draw() {
     winGame("You reached the helicopter!");
   }
 
-  // Display player coordinates
-  displayPlayerCoordinates();
-
-  // Display sound state
-  push();
-  textAlign(LEFT, TOP);
-  textSize(16);
-  fill(0);
-  text(`Sound: ${soundStarted ? (forestFireSound.isPlaying() ? "Playing" : "Paused") : "Off"}`, 
-       camera.position.x - width/2 + 10, camera.position.y - height/2 + 10);
-  pop();
-
-  if (!soundStarted) {
-    push();
-    textAlign(CENTER, CENTER);
-    textSize(24);
-    fill(255);
-    text("Click anywhere or press 'M' to start sound", width/2, height/2);
-    pop();
-  }
   camera.position.x = sprite.position.x;
   camera.moveTo(sprite.position.x, 540);
-  displayFPS();
 }
-
-function displayFPS() {
-  push();
-  textAlign(LEFT, TOP);
-  textSize(16);
-  fill(255); // Change to white for better visibility
-  stroke(0); // Add black outline
-  strokeWeight(2);
-  text(`FPS: ${fps}`, camera.position.x - width/2 + 10, camera.position.y - height/2 + 30);
-  pop();
-}
-
 
 function keyPressed() {
   // Prevent default space bar behavior
@@ -367,26 +334,6 @@ function winGame(message) {
   text("You Win: " + message, width / 2, height / 2);
 }
 
-function displayPlayerCoordinates() {
-  // Save current drawing settings
-  push();
-  
-  // Set text properties
-  textAlign(RIGHT, TOP);
-  textSize(16);
-  fill(0);  // Black text
-  
-  // Get player coordinates
-  let playerX = Math.round(sprite.position.x);
-  let playerY = Math.round(sprite.position.y);
-  
-  // Display coordinates in top right corner
-  // Adjust these values if needed to fit your camera setup
-  text(`X: ${playerX}\nY: ${playerY}`, camera.position.x + width/2 - 10, camera.position.y - height/2 + 10);
-  
-  // Restore original drawing settings
-  pop();
-}
 function startSound() {
   if (!soundStarted) {
     forestFireSound.play();

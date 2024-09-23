@@ -24,6 +24,8 @@ let antagonistSpawnIndex = 0;  // index into the spawnHeights
 let spawnIntervalFactor = Math.floor(game_end_x / antagonistSpawnCycle.length);
 let antagonistLife = 500; // in frames
 
+let gameOverPopup;
+
 function preload() {
   backdrop = loadImage('images/Arrowhead full canvas.png');
   helicopter = loadImage('images/heli.png');
@@ -124,6 +126,11 @@ function setup() {
 
   forestFireSound.setLoop(true);
   soundStarted = false; // Initialize as not started, but we'll change this soon
+
+  // Create the game over popup (initially hidden)
+  gameOverPopup = createDiv('');
+  gameOverPopup.class('game-over-popup');
+  gameOverPopup.hide();
 }
 
 function antagonistCollision(player, fire) {
@@ -302,36 +309,36 @@ function keyPressed() {
 // }
 
 function gameOver(message) {
-  // Handle game over state
-  console.log("Game Over: " + message);
   noLoop();
   
-  // Display game over message on screen
-  textAlign(CENTER);
-  textSize(32);
-  fill(255, 0, 0);
-  text("Game Over: " + message, width / 2, height / 2);
-  
-  // Create a refresh button
-  let refreshButton = createButton('Refresh Game');
-  refreshButton.position(width / 2 - 60, height / 2 + 40); // Position the button below the message
-  refreshButton.mousePressed(refreshGame); // Set the button's action
+  // Show and populate the game over popup
+  gameOverPopup.html(`
+    <h2>Game Over</h2>
+    <p>${message}</p>
+    <button onclick="refreshGame()">Restart Game</button>
+  `);
+  gameOverPopup.show();
 }
 
 function refreshGame() {
-  location.reload(); // Refresh the page to restart the game
+  gameOverPopup.hide();
+  // Reset game state here instead of reloading the page
+  sprite.position.x = 100;
+  sprite.position.y = 200;
+  // Reset other necessary game variables
+  loop();
 }
 
 function winGame(message) {
-  // Handle win state
-  console.log("You Win: " + message);
   noLoop();
   
-  // Display win message on screen
-  textAlign(CENTER);
-  textSize(32);
-  fill(0, 255, 0);
-  text("You Win: " + message, width / 2, height / 2);
+  // Show and populate the win game popup
+  gameOverPopup.html(`
+    <h2>You Win!</h2>
+    <p>${message}</p>
+    <button onclick="refreshGame()">Play Again</button>
+  `);
+  gameOverPopup.show();
 }
 
 function startSound() {

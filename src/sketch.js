@@ -110,8 +110,6 @@ function setup() {
   // Set origin to bottom center
   sprite.origin = { x: 0.5, y: 1 };
 
-  // Remove this line
-  // sprite.y -= spriteYOffset;
 
   // Add this line to adjust the image offset
   sprite.ani.offset.y = -100;

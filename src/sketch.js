@@ -174,6 +174,7 @@ function setup() {
   // sprite.onCollide(platforms, resetJumpCount);
 }
 
+
 function antagonistCollision(player, fire) {
   let spriteBottom = player.position.y + player.height/2;
   let antagonistTop = fire.position.y - fire.height/2;

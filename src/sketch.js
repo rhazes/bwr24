@@ -244,20 +244,35 @@ function draw() {
     sprite.velocity.y = 0;
   }
 
-  if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) {
-    sprite.velocity.x = -5;
-  } else if (keyIsDown(RIGHT_ARROW) || keyIsDown(68)) {
-    sprite.velocity.x = 5;
-  } else {
-    sprite.velocity.x = 0;
-  }
+  /*
+  HERE YOU WILL ADD THE CODE FOR THE MOVEMENT OF THE SPRITE
 
-  if ((keyIsDown(UP_ARROW) || keyIsDown(87)) && jumpCount < 2) {
-    if (jumpCount === 0 || (jumpCount === 1 && sprite.velocity.y > 0)) {
-      sprite.velocity.y = -12;
-      jumpCount++;
-    }
-  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  */
 
   // Add these lines to check for collisions and reset jump count
   if (sprite.collide(ground) || sprite.collide(platforms)) {
